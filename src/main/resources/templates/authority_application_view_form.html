@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Details</title>
+
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">-->
+</head>
+<body>
+<h1 style="color:blue">View All Applications:</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>SI. No</th>
+        <th>Application Type</th>
+        <th>Applied By</th>
+        <th>Registration Time</th>
+        <th>Child Name</th>
+         <th>Father Name</th>
+         <th>Gender</th>
+         <th>Action</th>
+         
+        
+        
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="birthDetail : ${birthDetails}">
+        <td th:text="${birthDetail.id}"></td>
+        <td th:text="${birthDetail.applicationtype}"></td>
+        <td th:text="${birthDetail.appliedby}"></td>
+      <td th:text="${#temporals.format(birthDetail.registrationTime, 'yyyy-MM-dd')}"></td>
+    <td th:text="${birthDetail.childname}"></td>
+    <td th:text="${birthDetail.fathername}"></td>
+    <td th:text="${birthDetail.sex}"></td>
+    
+
+    <td style="display: flex; gap: 2px;">
+        <!-- Approve Button -->
+        <form th:action="@{/csp/auth/approveApplication/{id}(id=${birthDetail.id})}" method="post">
+            <button type="submit">Approve</button>
+        </form>
+
+        <!-- Reject Button -->
+        <form th:action="@{/csp/auth/rejectApplication/{id}(id=${birthDetail.id})}" method="post">
+            <button  type="submit">Reject</button>
+        </form>
+        
+    </td>        
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
