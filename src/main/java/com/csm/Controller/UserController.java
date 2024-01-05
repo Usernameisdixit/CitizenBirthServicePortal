@@ -252,8 +252,51 @@ Optional<BirthDetails> OptionalBirthDetails = birthRepository.findById(id);
     
     
     @GetMapping("/csp/ctz/downloadPdf/{id}")
-    public void downloadPdf(@PathVariable Long id, HttpServletResponse response) throws IOException {
-        BirthDetails birthDetails = birthRepository.findById(id).orElse(null);
+    public void downloadPdf(@PathVariable Long id, HttpServletResponse response,HttpSession session) throws IOException {
+
+    	//List<User> user=userRepository.findAll();
+    	//String username = (String) session.getAttribute("username");
+
+    	// Fetch user by role ID
+       // User user = userRepository.findByRoleId(2L); // Assuming role ID 2
+        User user = userRepository.findByRoleName("Authority");
+
+        String username = null;  // Define username variable
+
+        if (user != null) {
+            username = user.getUsername();
+        }
+    	
+    	BirthDetails birthDetails = birthRepository.findById(id).orElse(null);
+       // User user=userService.findByUsername(username);
+    	//session.setAttribute("username", user.getUsername());
+//if(user!=null && user.getAddress()!=null)
+//{
+       //System.out.println("user value"+user.toString());
+//}
+    	
+//    	model.addAttribute("user",user);
+//    	
+//    	User user1 = (User) model.getAttribute("user");
+//        String username = null;  // Define username outside the if block
+//
+//       if (user1 != null && user1.getRole().equals("Authority")) {
+//            username = user1.getUsername();
+//            System.out.println("username"+username+user1.getId());
+//       }
+
+    	
+//    	  User user = (User) model.getAttribute("user");
+//    	    if (user != null && user.getRole().equals("Authority")) {
+//    	        String username = user.getUsername();
+//    	    }
+    	        
+    	        ////if(user.getRole().equals("Authority"))equals
+//    	        {
+//    	        	
+//    	        }
+    	
+    	//System.out.println("user value"+user.);
         if (birthDetails == null || !"Yes".equals(birthDetails.getStatus())) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
@@ -271,32 +314,123 @@ contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
         
         // Add title in center and bold
         contentStream.beginText();
-        contentStream.setFont(PDType1Font.TIMES_ROMAN, 16);
-        contentStream.newLineAtOffset(200, 750);
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 16);
+        contentStream.newLineAtOffset(210, 750);
         contentStream.showText("Birth Certificate");
         contentStream.endText();
         
+     // Draw underline below "Birth Certificate"
+        float textX = 210;
+        float textY = 750;
+        float fontSize = 16;
+        float textWidth = PDType1Font.TIMES_BOLD.getStringWidth("Birth Certificate") / 1000 * fontSize;
+        float startX = textX;
+        float endX = textX + textWidth;
+        float lineY = textY - 2; // Move the line slightly below the text
+
+        contentStream.moveTo(startX, lineY);
+        contentStream.lineTo(endX, lineY);
+        contentStream.setStrokingColor(0, 0, 0); // Set color to black
+        contentStream.stroke();
+//        contentStream.beginText();
+//        contentStream.setFont(PDType1Font.TIMES_ROMAN, 16);
+//        contentStream.newLineAtOffset(200, 500);
+//        contentStream.showText("Birth Certificate2");
+//        contentStream.endText();
+//        
         // Add certificate details
         contentStream.beginText();
-        contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+        contentStream.setFont(PDType1Font.TIMES_ITALIC, 14);
      // Starting position
         float yPosition = 700;
 
         // First line
-        contentStream.newLineAtOffset(50, yPosition);
-        contentStream.showText("This is to certify that " + birthDetails.getChildname() + " was born to " + birthDetails.getMothername() + " and " + birthDetails.getFathername() + ".");
-        contentStream.newLine();  // Move to the next line
+        contentStream.newLineAtOffset(210, yPosition);
+        contentStream.showText("This is to certify that ");
+        //contentStream.newLine(); // Move to the next line
+        //contentStream.showText("On " + birthDetails.getDateOfBirth() + " at " + birthDetails.getPlaceofbirth() + ".");
+
+        //contentStream.newLine();  // Move to the next line
 
         // Adjust the yPosition for the next line
-        yPosition -= 20;
+        //yPosition =700;
 
         // Second line
-        contentStream.newLineAtOffset(50, yPosition);
-        contentStream.newLine(); // Move to the next line
+        //contentStream.newLineAtOffset(50, yPosition);
+        //contentStream.newLine(); // Move to the next line
 
-        contentStream.showText("On " + birthDetails.getDateOfBirth() + " at " + birthDetails.getPlaceofbirth() + ".");
-        contentStream.newLine();  // Move to the next line
+        //contentStream.showText("On " + birthDetails.getDateOfBirth() + " at " + birthDetails.getPlaceofbirth() + ".");
+       // contentStream.newLine();  // Move to the next line
 
+        contentStream.endText();
+        
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 14);
+        contentStream.newLineAtOffset(240, 650);
+        contentStream.showText(birthDetails.getChildname());
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ITALIC, 14);
+        contentStream.newLineAtOffset(230, 600);
+        contentStream.showText("was born to");
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD_ITALIC, 14);
+        contentStream.newLineAtOffset(130, 550);
+        contentStream.showText(birthDetails.getMothername());
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ITALIC, 14);
+        contentStream.newLineAtOffset(250, 550);
+        contentStream.showText("and");
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD_ITALIC, 14);
+        contentStream.newLineAtOffset(370, 550);
+        contentStream.showText(birthDetails.getFathername());
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ITALIC, 14);
+        contentStream.newLineAtOffset(250, 500);
+        contentStream.showText("on");
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 14);
+        contentStream.newLineAtOffset(230, 450);
+        contentStream.showText(birthDetails.getDateOfBirth().toString());
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ITALIC, 14);
+        contentStream.newLineAtOffset(250, 400);
+        contentStream.showText("at");
+        contentStream.endText();
+        
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 14);
+        contentStream.newLineAtOffset(240, 350);
+        contentStream.showText(birthDetails.getState());
+        contentStream.endText();
+        
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_ITALIC, 14);
+        contentStream.newLineAtOffset(500, 53);
+        contentStream.showText("Approved By");
+        contentStream.endText();
+        
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.TIMES_BOLD_ITALIC, 14);
+        contentStream.newLineAtOffset(500, 35);
+        contentStream.showText(username != null ? username : "");
         contentStream.endText();
         
         contentStream.close();
