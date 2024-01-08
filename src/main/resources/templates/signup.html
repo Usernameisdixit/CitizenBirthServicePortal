@@ -43,9 +43,9 @@
 
         <!-- Phone Number -->
         <div class="mb-2 col-11">
-            <label for="phoneNumber" class="form-label">Phone Number:</label>
-            <input type="text" id="phoneNumber" th:field="*{phonenumber}" name="phoneNumber" class="form-control">
-            <span id="phoneNumberError" style="color: red; display: none;"></span>
+            <label for="phonenumber" class="form-label">Phone Number:</label>
+            <input type="text" id="phonenumber" th:field="*{phonenumber}" name="phonenumber" class="form-control">
+            <span id="phonenumberError" style="color: red; display: none;"></span>
             
         </div>
 
@@ -106,8 +106,8 @@
             const emailInput = document.getElementById("email");
             const emailError = document.getElementById("emailError");
             
-            const phoneNumberInput = document.getElementById("phoneNumber");
-            const phoneNumberError = document.getElementById("phoneNumberError");
+            const phonenumberInput = document.getElementById("phonenumber");
+            const phonenumberError = document.getElementById("phonenumberError");
 
             usernameInput.addEventListener("blur", function () {
                 const username = usernameInput.value;
@@ -138,12 +138,14 @@
         // Check email on blur
         emailInput.addEventListener("blur", function () {
             const email = emailInput.value;
+            console.log("email",email)
             fetch(`/checkEmail?email=${email}`)
                 .then(response => response.text())
                 .then(data => {
                                 console.log(data)
                 
                     if (data === "Email already exists") {
+                   
                         emailError.textContent = "Email already exists";
                         emailError.style.display = "block";
                     } else {
@@ -155,18 +157,21 @@
         
         
         // Check phoneNumber on blur
-        phoneNumberInput.addEventListener("blur", function () {
-            const phoneNumber = phoneNumberInput.value;
-            console.log(phoneNumber)
-            fetch(`/checkphoneNumber?phonenumber=${phoneNumber}`)
+        phonenumberInput.addEventListener("blur", function () {
+            const phonenumber = phonenumberInput.value.trim();
+            console.log("phone",phonenumber)
+            fetch(`/checkphoneNumber?phonenumber=${phonenumber}`)
                 .then(response => response.text())
                 .then(data => {
-                console.log(data)
+                console.log("data",data)
                     if (data === "phoneNumber already exists") {
-                        phoneNumberError.textContent = "Phone Number already exists";
-                        phoneNumberError.style.display = "block";
+                    console.log("entered if block")
+                        phonenumberError.textContent = "Phone Number already exists";
+                        phonenumberError.style.display = "block";
+                        console.log("exit if block")
                     } else {
-                        phoneNumberError.style.display = "none";
+                    console.log("entered else block")
+                        phonenumberError.style.display = "none";
                     }
                 })
                 .catch(error => console.error("There was a problem with the fetch operation:", error.message));

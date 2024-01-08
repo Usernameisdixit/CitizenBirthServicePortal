@@ -152,8 +152,8 @@ public class UserController {
     public ResponseEntity<String> checkphoneNumber(@RequestParam String phonenumber) {
         User user = userService.findByPhonenumber(phonenumber);
         if (user != null) {
-        	System.out.println("inside controller");
-            return ResponseEntity.ok("PhoneNumber already exists!");
+        	//System.out.println("inside controller");
+            return ResponseEntity.ok("phoneNumber already exists");
         }
         return ResponseEntity.ok("PhoneNumber is available");
     }
